@@ -1,0 +1,57 @@
+/* Acronym UI — front-end styling.
+ * Colors/glyph come from CSS custom properties written per-request by
+ * AUI_Settings::enqueue_frontend_assets() from the plugin's settings.
+ * The `body.aui-no-underline` / `body.aui-no-icon` classes let the two
+ * visual elements be switched off independently in the settings screen.
+ */
+
+.aui-acronym {
+	text-decoration: underline dotted var( --aui-underline-color, #666 );
+	text-underline-offset: 2px;
+	cursor: help;
+}
+
+body.aui-no-underline .aui-acronym {
+	text-decoration: none;
+}
+
+.aui-acronym::after {
+	content: var( --aui-icon-glyph, '[?]' );
+	display: inline-block;
+	margin-left: 2px;
+	color: var( --aui-icon-color, #666 );
+	font-size: 0.75em;
+	font-weight: normal;
+	vertical-align: super;
+	line-height: 1;
+}
+
+body.aui-no-icon .aui-acronym::after {
+	content: none;
+}
+
+/* Tooltip bubble built by assets/js/acronym-ui.js on hover/focus/click. */
+.aui-tooltip {
+	position: absolute;
+	z-index: 9999;
+	box-sizing: border-box;
+	max-width: 280px;
+	padding: 6px 10px;
+	background: #1e1e1e;
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.4;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba( 0, 0, 0, 0.2 );
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY( -4px );
+	transition: opacity 0.12s ease, transform 0.12s ease;
+	pointer-events: none;
+}
+
+.aui-tooltip.is-visible {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY( 0 );
+}

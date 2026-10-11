@@ -1,0 +1,9 @@
+/* Acronym UI — admin screen tweaks (Tools → Acronyms). */
+
+.form-wrap + .form-wrap {
+	margin-top: 30px;
+}
+
+.aui-color-field {
+	max-width: 100px;
+}
