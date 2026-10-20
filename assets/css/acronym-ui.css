@@ -35,7 +35,7 @@ body.aui-no-icon .aui-acronym::after {
 	position: absolute;
 	z-index: 9999;
 	box-sizing: border-box;
-	max-width: 280px;
+	max-width: min( 360px, calc( 100vw - 16px ) );
 	padding: 6px 10px;
 	background: #1e1e1e;
 	color: #fff;

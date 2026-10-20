@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Acronym UI
  * Description: Оборачивает акронимы и сокращения в постах и комментариях в <abbr> с настраиваемой подсказкой (пунктирное подчёркивание, значок [?], клик на мобильных). Переписан на основе плагина Acronyms 2 (Chris Cox) под современный PHP/WordPress.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires at least: 6.4
  * Requires PHP: 8.0
  * Author: llm-agent.ru
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AUI_VERSION', '1.0.0' );
+define( 'AUI_VERSION', '1.1.0' );
 define( 'AUI_PLUGIN_FILE', __FILE__ );
 define( 'AUI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AUI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -35,6 +35,10 @@ if ( is_admin() ) {
  */
 function aui_boot() {
 	load_plugin_textdomain( 'acronym-ui', false, dirname( plugin_basename( AUI_PLUGIN_FILE ) ) . '/languages' );
+
+	// Updates replaced in place (zip upload, git pull) don't fire the
+	// activation hook, so the dictionary upgrade is checked on every boot.
+	AUI_Install::maybe_upgrade();
 
 	AUI_Settings::init();
 	AUI_Replacer::init();

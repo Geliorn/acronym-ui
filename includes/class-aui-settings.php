@@ -20,6 +20,9 @@ class AUI_Settings {
 			'enable_underline' => 1,
 			'enable_icon'      => 1,
 			'icon_glyph'       => '[?]',
+			// Take underline/icon color from the theme's accent preset; the two
+			// colors below are then only the fallback for themes without one.
+			'use_theme_accent' => 1,
 			'underline_color'  => '#666666',
 			'icon_color'       => '#666666',
 			// How many times a single acronym gets highlighted per page. 0 = no limit.
@@ -58,10 +61,18 @@ class AUI_Settings {
 		wp_enqueue_style( 'acronym-ui', AUI_PLUGIN_URL . 'assets/css/acronym-ui.css', array(), AUI_VERSION );
 		wp_enqueue_script( 'acronym-ui', AUI_PLUGIN_URL . 'assets/js/acronym-ui.js', array(), AUI_VERSION, true );
 
+		$underline_color = $settings['underline_color'] ? $settings['underline_color'] : '#666';
+		$icon_color      = $settings['icon_color'] ? $settings['icon_color'] : '#666';
+
+		if ( ! empty( $settings['use_theme_accent'] ) ) {
+			$underline_color = self::theme_accent_css( $underline_color );
+			$icon_color      = self::theme_accent_css( $icon_color );
+		}
+
 		$css_vars = sprintf(
 			':root{--aui-underline-color:%1$s;--aui-icon-color:%2$s;--aui-icon-glyph:"%3$s";}',
-			$settings['underline_color'] ? $settings['underline_color'] : '#666',
-			$settings['icon_color'] ? $settings['icon_color'] : '#666',
+			$underline_color,
+			$icon_color,
 			addslashes( $settings['icon_glyph'] ? $settings['icon_glyph'] : '[?]' )
 		);
 		wp_add_inline_style( 'acronym-ui', $css_vars );
@@ -78,5 +89,25 @@ class AUI_Settings {
 				return $classes;
 			}
 		);
+	}
+
+	/**
+	 * CSS value resolving to the active theme's accent color. Block themes
+	 * expose palette presets as --wp--preset--color--{slug} custom
+	 * properties; the slug naming differs between themes, so the common ones
+	 * are chained (accent → accent-1 → primary) ending in the configured
+	 * color for themes that define none of them. Reading the variable at
+	 * render time (instead of resolving a hex in PHP) also follows style
+	 * variations and Site Editor palette edits automatically.
+	 */
+	private static function theme_accent_css( string $fallback ): string {
+		$slugs = apply_filters( 'aui_theme_accent_slugs', array( 'accent', 'accent-1', 'primary' ) );
+
+		$css = $fallback;
+		foreach ( array_reverse( (array) $slugs ) as $slug ) {
+			$css = sprintf( 'var(--wp--preset--color--%s,%s)', sanitize_key( $slug ), $css );
+		}
+
+		return $css;
 	}
 }

@@ -123,7 +123,7 @@ class AUI_Admin_Page {
 		}
 
 		$values = array();
-		foreach ( array( 'enable_content', 'enable_comments', 'enable_underline', 'enable_icon' ) as $key ) {
+		foreach ( array( 'enable_content', 'enable_comments', 'enable_underline', 'enable_icon', 'use_theme_accent' ) as $key ) {
 			$values[ $key ] = isset( $_POST[ $key ] ) ? 1 : 0;
 		}
 
@@ -241,9 +241,8 @@ class AUI_Admin_Page {
 
 				<div class="form-field form-required">
 					<label for="aui-fulltext"><?php esc_html_e( 'Full text', 'acronym-ui' ); ?></label>
-					<input type="text" id="aui-fulltext" name="fulltext" size="40" required
-						value="<?php echo esc_attr( $editing['fulltext'] ); ?>" />
-					<p><?php esc_html_e( 'Shown in the tooltip.', 'acronym-ui' ); ?></p>
+					<textarea id="aui-fulltext" name="fulltext" rows="4" cols="40" required><?php echo esc_textarea( $editing['fulltext'] ); ?></textarea>
+					<p><?php esc_html_e( 'Shown in the tooltip. Format: "Expansion — short explanation".', 'acronym-ui' ); ?></p>
 				</div>
 
 				<p class="submit">
@@ -283,6 +282,13 @@ class AUI_Admin_Page {
 								<?php esc_html_e( 'Show icon', 'acronym-ui' ); ?>
 								<input type="text" name="icon_glyph" value="<?php echo esc_attr( $s['icon_glyph'] ); ?>" size="4" />
 							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Color', 'acronym-ui' ); ?></th>
+						<td>
+							<label><input type="checkbox" name="use_theme_accent" value="1" <?php checked( $s['use_theme_accent'] ); ?> /> <?php esc_html_e( "Use the theme's accent color", 'acronym-ui' ); ?></label>
+							<p class="description"><?php esc_html_e( 'Underline and icon follow the accent color from the theme palette. The colors below are used when this is off, or when the theme has no accent color.', 'acronym-ui' ); ?></p>
 						</td>
 					</tr>
 					<tr>
